@@ -70,7 +70,7 @@ class ProfileCard extends Component {
   )
 
   renderLoadingView = () => (
-    <div className="profile-loader-container " id="loader">
+    <div className="profile-loader-container" id="loader">
       <Loader type="ThreeDots" color="#ffffff" height="50" width="50" />
     </div>
   )
