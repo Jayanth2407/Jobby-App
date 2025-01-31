@@ -3,7 +3,7 @@ import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import {AiOutlineSearch} from 'react-icons/ai'
 import Header from '../Header'
-import JobItem from '../JobItem'
+import JobItem from '../JobItemDetails'
 import './index.css'
 
 const employmentTypesList = [
