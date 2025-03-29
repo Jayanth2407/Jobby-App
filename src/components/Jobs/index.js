@@ -52,8 +52,12 @@ class Jobs extends Component {
 
   getJobs = async () => {
     this.setState({apiStatus: apiStatusConstants.inProgress})
-    const {employeeType, minimumSalary, searchInput, selectedLocations} =
-      this.state
+    const {
+      employeeType,
+      minimumSalary,
+      searchInput,
+      selectedLocations,
+    } = this.state
     const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${employeeType.join()}&minimum_package=${minimumSalary}&search=${searchInput}&location=${selectedLocations.join()}`
     const jwtToken = Cookies.get('jwt_token')
 
@@ -214,7 +218,7 @@ class Jobs extends Component {
                   className="search-button-container-desktop"
                   onClick={this.getJobs}
                 >
-                  -<BsSearch className="search-icon-desktop" />
+                  <BsSearch className="search-icon-desktop" />
                 </button>
               </div>
               {this.renderAllJobs()}
@@ -225,4 +229,5 @@ class Jobs extends Component {
     )
   }
 }
+
 export default Jobs
