@@ -1,11 +1,9 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
-import {AiOutlineSearch} from 'react-icons/ai'
-// eslint-disable-next-line import/extensions
+import {AiOutlineSearch, AiFillStar} from 'react-icons/ai'
+import {MdLocationOn} from 'react-icons/md'
 import Header from '../Header'
-// eslint-disable-next-line import/no-unresolved
-//import JobItem from '../JobItem'
 import './index.css'
 
 const employmentTypesList = [
@@ -82,8 +80,6 @@ class AllJobs extends Component {
   onGetProfileDetails = async () => {
     this.setState({apiStatus: apiStatusConstants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
-    // eslint-disable-next-line no-unused-vars
-    const {checkboxInputs, radioInput, searchInput} = this.state
     const profileApiUrl = 'https://apis.ccbp.in/profile'
     const optionsProfile = {
       headers: {
@@ -93,7 +89,7 @@ class AllJobs extends Component {
     }
     const responseProfile = await fetch(profileApiUrl, optionsProfile)
 
-    if (responseProfile.ok === true) {
+    if (responseProfile.ok) {
       const fetchedDataProfile = [await responseProfile.json()]
       const updatedDataProfile = fetchedDataProfile.map(eachItem => ({
         name: eachItem.profile_details.name,
@@ -122,7 +118,7 @@ class AllJobs extends Component {
       method: 'GET',
     }
     const responseJobs = await fetch(jobsApiUrl, optionsJobs)
-    if (responseJobs.ok === true) {
+    if (responseJobs.ok) {
       const fetchedDataJobs = await responseJobs.json()
       const updatedDataJobs = fetchedDataJobs.jobs.map(eachItem => ({
         companyLogoUrl: eachItem.company_logo_url,
@@ -163,11 +159,7 @@ class AllJobs extends Component {
       const filteredData = checkboxInputs.filter(
         eachItem => eachItem !== event.target.id,
       )
-      this.setState(
-        // eslint-disable-next-line no-unused-vars
-        prevState => ({checkboxInputs: filteredData}),
-        this.onGetJobDetails,
-      )
+      this.setState({checkboxInputs: filteredData}, this.onGetJobDetails)
     }
   }
 
@@ -197,7 +189,7 @@ class AllJobs extends Component {
         type="button"
         onClick={this.onRetryProfile}
       >
-        retry
+        Retry
       </button>
     </div>
   )
@@ -232,7 +224,7 @@ class AllJobs extends Component {
       <img className="failure-img" src={failureViewImg} alt="failure view" />
       <h1 className="failure-heading">Oops! Something Went Wrong</h1>
       <p className="failure-paragraph">
-        we cannot seem to find the page you are looking for
+        We cannot seem to find the page you are looking for
       </p>
       <div className="jobs-failure-button-container">
         <button
@@ -240,7 +232,7 @@ class AllJobs extends Component {
           type="button"
           onClick={this.onRetryJobs}
         >
-          retry
+          Retry
         </button>
       </div>
     </div>
@@ -256,13 +248,47 @@ class AllJobs extends Component {
           src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
           alt="no jobs"
         />
-        <h1>No jobs found</h1>
-        <p>We could not find any jobs. Try other filters.</p>
+        <h1 className="no-jobs-heading">No jobs found</h1>
+        <p className="no-jobs-description">
+          We could not find any jobs. Try other filters.
+        </p>
       </div>
     ) : (
       <ul className="ul-job-items-container">
         {jobsData.map(eachItem => (
-          <JobItem key={eachItem.id} jobData={eachItem} />
+          <li key={eachItem.id} className="job-item">
+            <div className="logo-title-location-container">
+              <div className="logo-title-container">
+                <img
+                  src={eachItem.companyLogoUrl}
+                  className="company-logo"
+                  alt="company logo"
+                />
+                <div className="title-rating-container">
+                  <h1 className="title-heading">{eachItem.title}</h1>
+                  <div className="star-rating-container">
+                    <AiFillStar className="star-icon" />
+                    <p className="rating-text">{eachItem.rating}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="location-package-container">
+                <div className="location-job-type-container">
+                  <div className="location-icon-location-container">
+                    <MdLocationOn className="location-icon" />
+                    <p className="location">{eachItem.location}</p>
+                  </div>
+                  <div className="employment-type-icon-employment-type-container">
+                    <p className="job-type">{eachItem.employmentType}</p>
+                  </div>
+                </div>
+                <p className="package">{eachItem.packagePerAnnum}</p>
+              </div>
+            </div>
+            <hr className="item-hr-line" />
+            <h1 className="description-heading">Description</h1>
+            <p className="description-text">{eachItem.jobDescription}</p>
+          </li>
         ))}
       </ul>
     )
@@ -335,8 +361,7 @@ class AllJobs extends Component {
   }
 
   render() {
-    // eslint-disable-next-line no-unused-vars
-    const {checkboxInputs, radioInput, searchInput} = this.state
+    const {searchInput} = this.state
     return (
       <>
         <Header />
@@ -351,7 +376,7 @@ class AllJobs extends Component {
             {this.onGetRadioButtonsView()}
           </div>
           <div className="jobs-container">
-            <div>
+            <div className="search-input-container">
               <input
                 className="search-input"
                 type="search"
@@ -363,7 +388,6 @@ class AllJobs extends Component {
               <button
                 data-testid="searchButton"
                 type="button"
-                label="text"
                 className="search-button"
                 onClick={this.onSubmitSearchInput}
               >
