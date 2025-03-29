@@ -5,7 +5,8 @@ import {AiFillStar} from 'react-icons/ai'
 import {BiLinkExternal} from 'react-icons/bi'
 import Loader from 'react-loader-spinner'
 import Header from '../Header'
-import SimilarJobs from '../SimilarJobItem'
+// eslint-disable-next-line import/extensions
+//import SimilarJobs from '../SimilarJobs'
 import './index.css'
 
 const apiStatusConstants = {

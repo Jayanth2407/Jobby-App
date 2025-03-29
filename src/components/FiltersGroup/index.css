@@ -1,5 +1,8 @@
 .filters-group-container {
   margin-top: 16px;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
 }
 
 @media screen and (min-width: 768px) {
@@ -59,6 +62,7 @@
 .horizontal-line {
   background-color: #475569;
 }
+
 .employment-type-container {
   display: flex;
   flex-direction: column;
@@ -67,7 +71,7 @@
   color: #ffffff;
   font-weight: 400;
   font-family: 'Roboto';
-  font-size: 16px;
+  font-size: 25px;
   padding-bottom: 15px;
 }
 .employee-type-list-container {
@@ -87,23 +91,23 @@
   margin-left: 10px;
   font-size: 14px;
 }
-.salary-range-container {
+.container {
   display: flex;
   flex-direction: column;
 }
-.salary-range-heading {
+.heading {
   color: #ffffff;
   font-weight: 400;
   font-family: 'Roboto';
-  font-size: 16px;
+  font-size: 25px;
   padding-bottom: 15px;
 }
-.salary-range-list-container {
+.list-container {
   list-style-type: none;
   padding: 0px;
   margin: 0px;
 }
-.salary-item {
+.item {
   display: flex;
   align-items: center;
   padding: 0px;

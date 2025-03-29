@@ -5,45 +5,28 @@ import {BsSearch} from 'react-icons/bs'
 import Header from '../Header'
 import FiltersGroup from '../FiltersGroup'
 import JobCard from '../JobCard'
-
 import './index.css'
 
 const employmentTypesList = [
-  {
-    label: 'Full Time',
-    employmentTypeId: 'FULLTIME',
-  },
-  {
-    label: 'Part Time',
-    employmentTypeId: 'PARTTIME',
-  },
-  {
-    label: 'Freelance',
-    employmentTypeId: 'FREELANCE',
-  },
-  {
-    label: 'Internship',
-    employmentTypeId: 'INTERNSHIP',
-  },
+  {label: 'Full Time', employmentTypeId: 'FULLTIME'},
+  {label: 'Part Time', employmentTypeId: 'PARTTIME'},
+  {label: 'Freelance', employmentTypeId: 'FREELANCE'},
+  {label: 'Internship', employmentTypeId: 'INTERNSHIP'},
 ]
 
 const salaryRangesList = [
-  {
-    salaryRangeId: '1000000',
-    label: '10 LPA and above',
-  },
-  {
-    salaryRangeId: '2000000',
-    label: '20 LPA and above',
-  },
-  {
-    salaryRangeId: '3000000',
-    label: '30 LPA and above',
-  },
-  {
-    salaryRangeId: '4000000',
-    label: '40 LPA and above',
-  },
+  {salaryRangeId: '1000000', label: '10 LPA and above'},
+  {salaryRangeId: '2000000', label: '20 LPA and above'},
+  {salaryRangeId: '3000000', label: '30 LPA and above'},
+  {salaryRangeId: '4000000', label: '40 LPA and above'},
+]
+
+const locations = [
+  {id: 'HYDERABAD', label: 'Hyderabad'},
+  {id: 'BANGALORE', label: 'Bangalore'},
+  {id: 'CHENNAI', label: 'Chennai'},
+  {id: 'DELHI', label: 'Delhi'},
+  {id: 'MUMBAI', label: 'Mumbai'},
 ]
 
 const apiStatusConstants = {
@@ -60,6 +43,7 @@ class Jobs extends Component {
     employeeType: [],
     minimumSalary: 0,
     searchInput: '',
+    selectedLocations: [],
   }
 
   componentDidMount() {
@@ -67,21 +51,18 @@ class Jobs extends Component {
   }
 
   getJobs = async () => {
-    this.setState({
-      apiStatus: apiStatusConstants.inProgress,
-    })
-    const {employeeType, minimumSalary, searchInput} = this.state
-    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${employeeType.join()}&minimum_package=${minimumSalary}&search=${searchInput}`
+    this.setState({apiStatus: apiStatusConstants.inProgress})
+    const {employeeType, minimumSalary, searchInput, selectedLocations} =
+      this.state
+    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${employeeType.join()}&minimum_package=${minimumSalary}&search=${searchInput}&location=${selectedLocations.join()}`
     const jwtToken = Cookies.get('jwt_token')
 
     const options = {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
+      headers: {Authorization: `Bearer ${jwtToken}`},
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
-    if (response.ok === true) {
+    if (response.ok) {
       const data = await response.json()
       const updatedJobsData = data.jobs.map(eachJob => ({
         companyLogoUrl: eachJob.company_logo_url,
@@ -98,17 +79,44 @@ class Jobs extends Component {
         apiStatus: apiStatusConstants.success,
       })
     } else {
-      this.setState({
-        apiStatus: apiStatusConstants.failure,
-      })
+      this.setState({apiStatus: apiStatusConstants.failure})
     }
+  }
+
+  changeSearchInput = event => {
+    this.setState({searchInput: event.target.value})
+  }
+
+  onEnterSearchInput = event => {
+    if (event.key === 'Enter') {
+      this.getJobs()
+    }
+  }
+
+  changeSalary = salary => {
+    this.setState({minimumSalary: salary}, this.getJobs)
+  }
+
+  changeEmployeeList = type => {
+    this.setState(
+      prev => ({employeeType: [...prev.employeeType, type]}),
+      this.getJobs,
+    )
+  }
+
+  changeLocation = location => {
+    this.setState(prev => {
+      const isSelected = prev.selectedLocations.includes(location)
+      const updatedLocations = isSelected
+        ? prev.selectedLocations.filter(loc => loc !== location)
+        : [...prev.selectedLocations, location]
+      return {selectedLocations: updatedLocations}
+    }, this.getJobs)
   }
 
   renderJobsList = () => {
     const {jobsList} = this.state
-    const renderJobsList = jobsList.length > 0
-
-    return renderJobsList ? (
+    return jobsList.length > 0 ? (
       <div className="all-jobs-container">
         <ul className="jobs-list">
           {jobsList.map(job => (
@@ -161,7 +169,6 @@ class Jobs extends Component {
 
   renderAllJobs = () => {
     const {apiStatus} = this.state
-
     switch (apiStatus) {
       case apiStatusConstants.success:
         return this.renderJobsList()
@@ -174,27 +181,6 @@ class Jobs extends Component {
     }
   }
 
-  changeSearchInput = event => {
-    this.setState({searchInput: event.target.value})
-  }
-
-  onEnterSearchInput = event => {
-    if (event.key === 'Enter') {
-      this.getJobs()
-    }
-  }
-
-  changeSalary = salary => {
-    this.setState({minimumSalary: salary}, this.getJobs)
-  }
-
-  changeEmployeeList = type => {
-    this.setState(
-      prev => ({employeeType: [...prev.employeeType, type]}),
-      this.getJobs,
-    )
-  }
-
   render() {
     const {searchInput} = this.state
     return (
@@ -205,11 +191,13 @@ class Jobs extends Component {
             <FiltersGroup
               employmentTypesList={employmentTypesList}
               salaryRangesList={salaryRangesList}
+              locations={locations}
               changeSearchInput={this.changeSearchInput}
               searchInput={searchInput}
               getJobs={this.getJobs}
               changeSalary={this.changeSalary}
               changeEmployeeList={this.changeEmployeeList}
+              changeLocation={this.changeLocation}
             />
             <div className="search-input-jobs-list-container">
               <div className="search-input-container-desktop">
@@ -226,7 +214,7 @@ class Jobs extends Component {
                   className="search-button-container-desktop"
                   onClick={this.getJobs}
                 >
-                  <BsSearch className="search-icon-desktop" />
+                  -<BsSearch className="search-icon-desktop" />
                 </button>
               </div>
               {this.renderAllJobs()}

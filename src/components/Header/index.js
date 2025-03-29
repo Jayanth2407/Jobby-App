@@ -39,6 +39,7 @@ const Header = props => {
             </li>
             <li>
               <button
+                label="text"
                 type="button"
                 className="nav-mobile-btn"
                 onClick={onClickLogout}

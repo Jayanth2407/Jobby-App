@@ -2,8 +2,10 @@ import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import {AiOutlineSearch} from 'react-icons/ai'
+// eslint-disable-next-line import/extensions
 import Header from '../Header'
-import JobItem from '../JobItemDetails'
+// eslint-disable-next-line import/no-unresolved
+//import JobItem from '../JobItem'
 import './index.css'
 
 const employmentTypesList = [
@@ -361,6 +363,7 @@ class AllJobs extends Component {
               <button
                 data-testid="searchButton"
                 type="button"
+                label="text"
                 className="search-button"
                 onClick={this.onSubmitSearchInput}
               >

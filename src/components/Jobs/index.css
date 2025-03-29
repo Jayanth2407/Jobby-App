@@ -172,7 +172,7 @@
   }
 }
 .jobs-list {
-  padding-left: 0;
+  padding-left: 0px;
 }
 .search-input-jobs-list-container {
   display: flex;
